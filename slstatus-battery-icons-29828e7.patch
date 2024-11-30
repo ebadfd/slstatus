@@ -1,3 +1,13 @@
+From 29828e7854500fc623ae933280f7c623137c6ee9 Mon Sep 17 00:00:00 2001
+From: dasith <dasith@ebadfd.tech>
+Date: Sat, 30 Nov 2024 19:41:18 +0530
+Subject: [PATCH] feat: add battery icon support
+
+---
+ components/battery.c | 54 ++++++++++++++++++++++++++++++++++++++++++++
+ slstatus.h           |  1 +
+ 2 files changed, 55 insertions(+)
+
 diff --git a/components/battery.c b/components/battery.c
 index 1c753f9..4fbb661 100644
 --- a/components/battery.c
