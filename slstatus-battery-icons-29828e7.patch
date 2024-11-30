@@ -1,0 +1,77 @@
+diff --git a/components/battery.c b/components/battery.c
+index 1c753f9..4fbb661 100644
+--- a/components/battery.c
++++ b/components/battery.c
+@@ -75,6 +75,60 @@
+ 
+ 		return (i == LEN(map)) ? "?" : map[i].symbol;
+ 	}
++	const char *
++	battery_icons(const char *bat)
++	{
++		typedef struct {
++			char *symbol;
++		} BatteryState;
++		// this requires status2d patch for dwm to display the colors
++		// https://dwm.suckless.org/patches/status2d/
++		BatteryState b_icons[103] = {
++			[5] = {"^c#d36c6c^󰂃^c#d3c8ba^"},    // red for critical low battery
++			[10] = {"^c#e7a953^󰁺^c#d3c8ba^"},   // orange for low battery
++			[20] = {"^c#e7a953^󰁻^c#d3c8ba^"},   // orange for low battery
++			[30] = {"^c#e7a953^󰁼^c#d3c8ba^"},   // orange for low battery
++			[40] = {"^c#e7a953^󰁽^c#d3c8ba^"},   // orange for moderate charge
++			[50] = {"^c#4d8dc4^󰁾^c#d3c8ba^"},   // blue for half-charged
++			[60] = {"^c#a1c05d^󰁿^c#d3c8ba^"},   // green for healthy charge
++			[70] = {"^c#4d8dc4^󰂀^c#d3c8ba^"},   // blue for good charge
++			[80] = {"^c#4d8dc4^󰂁^c#d3c8ba^"},   // blue for high charge
++			[90] = {"^c#4d8dc4^󰂂^c#d3c8ba^"},   // blue for very high charge
++			[100] = {"^c#a1c05d^󱟢^c#d3c8ba^"},  // green for full charge
++			[101] = {"^c#d36c6c^󱉝^c#d3c8ba^"},  // red for for empty or unknown state
++			[102] = {"^c#a1c05d^󰂄^c#a1c05d^"}   // green for charging
++		};
++
++		size_t i;
++		int cap_perc;
++		char path[PATH_MAX], state[12];
++		int thresholds[] = {10, 25, 50, 60, 70, 80, 90, 100};
++		int num_thresholds = sizeof(thresholds) / sizeof(thresholds[0]);
++
++
++		if (esnprintf(path, sizeof(path), POWER_SUPPLY_CAPACITY, bat) < 0)
++			return NULL;
++		if (pscanf(path, "%d", &cap_perc) != 1)
++			return NULL;
++
++		if (esnprintf(path, sizeof(path), POWER_SUPPLY_STATUS, bat) < 0)
++			return NULL;
++		if (pscanf(path, "%12[a-zA-Z ]", state) != 1)
++			return NULL;
++
++
++		if (!strcmp("Charging", state)) {
++			return bprintf("%s %d", b_icons[102].symbol, cap_perc);
++		}
++
++		for (int i = 0; i < num_thresholds; i++) {
++			if (cap_perc <= thresholds[i]) {
++				return bprintf("%s %d", b_icons[thresholds[i]].symbol, cap_perc);
++			}
++		}
++
++		return bprintf("%s %d", b_icons[101].symbol, cap_perc);
++	}
+ 
+ 	const char *
+ 	battery_remaining(const char *bat)
+diff --git a/slstatus.h b/slstatus.h
+index 8ef5874..24508ee 100644
+--- a/slstatus.h
++++ b/slstatus.h
+@@ -4,6 +4,7 @@
+ const char *battery_perc(const char *);
+ const char *battery_remaining(const char *);
+ const char *battery_state(const char *);
++const char *battery_icons(const char *bat);
+ 
+ /* cat */
+ const char *cat(const char *path);
