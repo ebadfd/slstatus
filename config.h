@@ -69,7 +69,7 @@ static const struct arg args[] = {
     //     "enp0s31f6"},
     //{run_command, " | %s",
     //  "bash /home/dasith/Developer/personal/slstatus/battery.sh"},
-    {battery_icons, " | %s ", "BAT0"},
+    {battery_icons, " | %s", "BAT0"},
     //{cpu_perc, " |  %s%%", NULL},
     //{ram_used, " |  %s", NULL},
     {datetime, " | ^c#c8c7dc^ %s ", "%a %F %T"},
