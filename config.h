@@ -65,13 +65,13 @@ static const char unknown_str[] = "n/a";
  */
 static const struct arg args[] = {
     /* function format          argument */
-    //     {ipv4, " | 󰌗 %s", "enp0s31f6"},   {netspeed_rx, " %sB/s",
-    //     "enp0s31f6"},
+    {ipv4, " | 󰌗  %s", "enp0s31f6" },
+    {ipv4, " | 󰖩  %s", "wlp3s0" },
     //{run_command, " | %s",
     //  "bash /home/dasith/Developer/personal/slstatus/battery.sh"},
+    {cpu_perc, " |  %s%%", NULL},
+    {ram_used, " |  %s", NULL},
     {battery_icons, " | %s", "BAT0"},
-    //{cpu_perc, " |  %s%%", NULL},
-    //{ram_used, " |  %s", NULL},
     {datetime, " | ^c#c8c7dc^ %s ", "%a %F %T"},
 };
 
